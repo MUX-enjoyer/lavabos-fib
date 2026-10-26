@@ -8,6 +8,7 @@ import Zoom from "yet-another-react-lightbox/plugins/zoom";
 import "yet-another-react-lightbox/styles.css";
 import "yet-another-react-lightbox/plugins/thumbnails.css";
 import Title from "@/components/ui/Title";
+import { cancons } from "@/lib/cancons";
 
 export type BuildingImages = {
   building: string;
@@ -39,6 +40,8 @@ export default function Gallery({ gallery }: GalleryProps) {
           <Title level={2} className="mb-6">
             {year}
           </Title>
+          {/* Si cada lavabo té una sola foto, els lavabos es posen en quadrícula */}
+          <div className={buildings.every(({ images }) => images.length === 1) ? "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-x-2 [&_.grid]:grid-cols-1" : undefined}>
           {buildings.map(({ building, images }) => (
             <div key={building} className="mb-8">
               {building !== year && (
@@ -68,8 +71,14 @@ export default function Gallery({ gallery }: GalleryProps) {
                   );
                 })}
               </div>
+              {images.map((src) => cancons[src.split("/").pop()!]).map((canco) => canco && (
+                <a key={canco.spotify} href={canco.spotify} target="_blank" rel="noopener noreferrer" className="block mt-1 font-mono text-xs text-[var(--muted)] hover:text-[var(--primary)] truncate">
+                  {canco.titol} – {canco.autor}
+                </a>
+              ))}
             </div>
           ))}
+          </div>
         </section>
       ))}
 
